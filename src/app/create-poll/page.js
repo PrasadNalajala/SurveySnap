@@ -10,7 +10,7 @@ export default function CreatePoll() {
   const [options, setOptions] = useState(["", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const [pollId,setPollId]=useState('')
   const handleAddOption = () => {
     setOptions([...options, ""]);
   };
@@ -57,6 +57,7 @@ export default function CreatePoll() {
         setIsLoading(false);
         alert(result.error);
       } else {
+        setPollId(result.poll._id)
         setIsOpen(true);
         console.log(result.poll);
       }
@@ -70,12 +71,28 @@ export default function CreatePoll() {
   };
 
   // Function to handle sharing the poll
-  const handleSharePoll = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-      alert("Poll link copied to clipboard! Share it with your friends.");
-    });
+  const handleSharePoll = async () => {
+    if (!pollId) return;
+  
+    const pollUrl = `${window.location.origin}/poll/${pollId}`; 
+  
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          text: "I created a poll, check it out!",
+          url: pollUrl,
+        });
+        setIsOpen(false)
+      } catch (error) {
+        alert("Error sharing the poll.");
+        console.error("Error sharing:", error);
+      }
+    } else {
+      alert("Your browser does not support the Web Share API.");
+    }
   };
+  
 
   return (
     <>
