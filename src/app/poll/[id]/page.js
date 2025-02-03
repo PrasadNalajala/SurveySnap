@@ -33,13 +33,13 @@ const Poll = () => {
       setError("Please select an option.");
       return;
     }
-    
+    setLoading(true);
     try {
       setError(null); 
       setLoading(true);
       
       const response = await axios.post(`/api/get-polls/${id}`, { optionId: selectedOption });
-      console.log("posting",response)
+      fetchPoll(id)
 
       setPoll(response.data.poll); 
       setLoading(false)
@@ -52,9 +52,9 @@ const Poll = () => {
   };
 
   const handleSharePoll = async () => {
-    if (!pollId) return;
+    if (!id) return;
   
-    const pollUrl = `${window.location.origin}/poll/${pollId}`; 
+    const pollUrl = `${window.location.origin}/poll/${id}`; 
   
     if (navigator.share) {
       try {
@@ -63,7 +63,9 @@ const Poll = () => {
           text: "I voted on this poll, vote yourself now!",
           url: pollUrl,
         });
+
         setIsOpen(false)
+        redirect("/")
       } catch (error) {
         alert("Error sharing the poll.");
         console.error("Error sharing:", error);
@@ -77,7 +79,7 @@ const Poll = () => {
     <>
       <Navbar />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-6">
-        {pollData || isLoading? (
+        {pollData && !isLoading? (
           <div className="max-w-lg w-full bg-gray-800 p-6 rounded-xl shadow-lg">
             <h2 className="text-2xl font-semibold text-center mb-4">{pollData.title}</h2>
             <div className="space-y-3">
