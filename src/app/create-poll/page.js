@@ -133,7 +133,7 @@ export default function CreatePoll() {
                       onChange={(e) =>
                         handleOptionChange(index, e.target.value)
                       }
-                      className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
                       placeholder={`Option ${index + 1}`}
                     />
                     {options.length > 2 && (
