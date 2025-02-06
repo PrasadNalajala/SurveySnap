@@ -13,9 +13,11 @@ const Poll = () => {
   const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isVoted,setIsVoted]=useState()
-  const [title,setTitle]=useState('')
+  const [localSelectionOption, setLocalSelectionOption] = useState(null)
+  const isVoted = localSelectionOption !== null
 
+  const [title, setTitle] = useState('')
+  console.log(isVoted)
   const fetchPoll = async (id) => {
     const response = await fetch(`/api/get-polls/${id}`);
     const data = await response.json();
@@ -26,15 +28,15 @@ const Poll = () => {
 
   useEffect(() => {
     const storedVote = localStorage.getItem(id);
-    setIsVoted(storedVote);
-  
+    setLocalSelectionOption(storedVote);
+
     if (storedVote !== null) {
       setSelectedOption(storedVote);
     }
     fetchPoll(id);
   }, [id]);
 
-  
+
 
   const handleVote = async () => {
     if (!selectedOption) {
@@ -49,11 +51,11 @@ const Poll = () => {
       const response = await axios.post(`/api/get-polls/${id}`, {
         optionId: selectedOption,
       });
-      localStorage.setItem(id,selectedOption)
-      fetchPoll(id);
+      localStorage.setItem(id, selectedOption)
       setPoll(response.data.poll);
-      setLoading(false);
       setIsOpen(true);
+      fetchPoll(id);
+      setLoading(false);
     } catch (err) {
       setError("Failed to submit vote. Please try again.");
     } finally {
@@ -77,8 +79,7 @@ const Poll = () => {
         setIsOpen(false);
         redirect("/");
       } catch (error) {
-        alert("Error sharing the poll.");
-        console.error("Error sharing:", error);
+        console.log("Error sharing:", error);
       }
     } else {
       alert("Your browser does not support the Web Share API.");
@@ -90,55 +91,63 @@ const Poll = () => {
       <Navbar />
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-6">
         {pollData && !isLoading ? (
-          <div className="max-w-lg w-full bg-gray-800 p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-semibold text-center mb-4">
-              {pollData.title}
-            </h2>
-            <div className="space-y-3">
-              {pollData.options.map((option) => (
-                <button
-                  key={option._id}
-                  className={`w-full p-3 rounded-lg text-lg font-medium flex justify-between items-center transition-all duration-300 
-                    ${
-                      selectedOption === option._id
+          <div >
+            <div className="max-w-lg w-full bg-gray-800 p-6 rounded-xl shadow-lg min-w-64">
+              <h2 className="text-2xl font-semibold text-center mb-4">
+                {pollData.title}
+              </h2>
+              <div className="space-y-3">
+                {pollData.options.map((option) => (
+                  <button
+                    key={option._id}
+                    className={`w-full p-3 rounded-lg text-lg font-medium flex justify-between items-center transition-all duration-300 
+                    ${selectedOption === option._id
                         ? "bg-blue-600"
                         : "bg-gray-700 hover:bg-blue-500"
-                    }`}
-                  onClick={() => setSelectedOption(option._id)}
-                  title={isVoted !== undefined ? "Do avoid duplicate you can't vote!" : ""}
-                >
-                  <span>{option.text}</span>
-                  <span className="bg-gray-900 text-gray-300 px-3 py-1 rounded-lg text-sm">
-                    {option.votes} votes
-                  </span>
-                </button>
-              ))}
-            </div>
+                      }`}
+                    onClick={() => setSelectedOption(option._id)}
+                    title={isVoted ? "Do avoid duplicate you can't vote!" : ""}
+                  >
+                    <span>{option.text}</span>
+                    <span className="bg-gray-900 text-gray-300 px-3 py-1 rounded-lg text-sm">
+                      {option.votes} votes
+                    </span>
+                  </button>
+                ))}
+              </div>
               <div className="flex justify-center items-center w-full">
-                {isVoted!==undefined?
-                <button
-                className={`w-2/5 p-3 rounded-lg text-lg font-medium flex justify-center items-center self-center transition-all duration-300 bg-pink-500 text-center mt-3`}
-                onClick={handleSharePoll}
-                >
-                  Share
-                </button>:
-            <button
-              className={`w-2/5 p-3 rounded-lg text-lg font-medium flex justify-center items-center self-center transition-all duration-300 ${isVoted!==undefined?'bg-blue-700':'bg-pink-500'} text-center mt-3`}
-              onClick={handleVote}
-              disabled={isVoted!==undefined}
-              title={isVoted !== undefined ? "You have already voted!" : ""}
-            >
-              Submit
-            </button>
-            
-            
-            }
+                {isVoted ?
+                  <button
+                    className={`w-2/5 p-3 rounded-lg text-lg font-medium flex justify-center items-center self-center transition-all duration-300 bg-pink-500 text-center mt-3`}
+                    onClick={handleSharePoll}
+                  >
+                    Share
+                  </button> :
+                  <button
+                    className={`w-2/5 p-3 rounded-lg text-lg font-medium flex justify-center items-center self-center transition-all duration-300 ${isVoted !== null ? 'bg-blue-700' : 'bg-pink-500'} text-center mt-3`}
+                    onClick={handleVote}
+                    disabled={isVoted}
+                    title={isVoted ? "You have already voted!" : ""}
+                  >
+                    Submit
+                  </button>
+
+
+                }
+              </div>
             </div>
+            {isVoted ?
+              <div className="text-center mt-7 flex justify-center align-center w-full">
+                <p className="bg-yellow-700 text-white w-fit p-2 rounded-lg">To avoid duplicates you can't vote again</p>
+              </div> : ''
+            }
+
           </div>
         ) : (
           <img src="/animations/loader.gif" />
         )}
       </div>
+
       <>
         {/* Modal */}
         <Transition appear show={isOpen} as={Fragment}>
