@@ -150,7 +150,9 @@ const Poll = () => {
                 <p className="bg-yellow-700 text-white w-fit p-2 rounded-lg">To avoid duplicates you can't vote again</p>
               </div> : ''
             }
-          <PollChart pollData={pollData} className="mt-5"/>
+            {isVoted?
+          <PollChart pollData={pollData} className="mt-5"/> :''
+            }
           </div>
         ) : (
           <img src="/animations/loader.gif" />
