@@ -21,9 +21,9 @@ const Poll = () => {
   return (
     <div>
       <Navbar />
-      <div>
+      <div className="flex justify-center align-center min-h-screen">
         {isLoading ? (
-          <img src="/animations/loader.gif" />
+          <img src="/animations/loader.gif" className="h-fit self-center"/>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
             {pollsData?.map((poll, index) => (

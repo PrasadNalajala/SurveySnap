@@ -4,6 +4,7 @@ import { redirect, useParams } from "next/navigation";
 import { useEffect, useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Navbar from "../../components/navbar";
+import PollChart from "@/app/components/pollchart";
 import axios from "axios";
 const Poll = () => {
   const params = useParams();
@@ -53,19 +54,26 @@ const Poll = () => {
       });
       localStorage.setItem(id, selectedOption)
       setPoll(response.data.poll);
-      setIsOpen(true);
-      fetchPoll(id);
-      setLoading(false);
+      
     } catch (err) {
       setError("Failed to submit vote. Please try again.");
     } finally {
       setLoading(false);
+      setIsOpen(true);
+      window.location.reload();
     }
   };
 
-  const handleSharePoll = async () => {
-    if (!id) return;
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      window.location.reload();
+    }, 300); 
+  };
 
+  const handleSharePoll = async () => {
+    setIsOpen(false)
+    if (!id) return;
     const pollUrl = `${window.location.origin}/poll/${id}`;
 
     if (navigator.share) {
@@ -84,6 +92,7 @@ const Poll = () => {
     } else {
       alert("Your browser does not support the Web Share API.");
     }
+    
   };
 
   return (
@@ -137,11 +146,11 @@ const Poll = () => {
               </div>
             </div>
             {isVoted ?
-              <div className="text-center mt-7 flex justify-center align-center w-full">
+              <div className="text-center mt-7 mb-10 flex justify-center align-center w-full">
                 <p className="bg-yellow-700 text-white w-fit p-2 rounded-lg">To avoid duplicates you can't vote again</p>
               </div> : ''
             }
-
+          <PollChart pollData={pollData} className="mt-5"/>
           </div>
         ) : (
           <img src="/animations/loader.gif" />
@@ -154,7 +163,7 @@ const Poll = () => {
           <Dialog
             as="div"
             className="relative z-50"
-            onClose={() => setIsOpen(false)}
+            onClose={handleCloseModal}
           >
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
               <Dialog.Panel className="bg-white p-6 rounded-lg shadow-lg w-96">
