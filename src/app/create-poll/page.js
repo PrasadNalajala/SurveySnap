@@ -70,7 +70,6 @@ export default function CreatePoll() {
     setOptions(["", ""]);
   };
 
-  // Function to handle sharing the poll
   const handleSharePoll = async () => {
     if (!pollId) return;
   
