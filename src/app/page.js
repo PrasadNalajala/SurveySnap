@@ -11,7 +11,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="hero-section text-center mb-12">
           <h1 className="text-4xl font-bold text-blue-600">
-            Welcome to VoteSphere
+            Welcome to SurveySnap
           </h1>
           <p className="text-lg mt-4 text-gray-700">
             Your trusted platform for conducting quick and easy polls.
@@ -36,7 +36,7 @@ export default function Home() {
         {/* Features Section */}
         <section className="features-section mb-12 text-center">
           <h2 className="text-3xl font-semibold text-blue-600">
-            Why Choose VoteSphere?
+            Why Choose SurveySnap?
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
             <div className="feature bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-all">

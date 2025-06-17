@@ -70,7 +70,6 @@ export default function CreatePoll() {
     setOptions(["", ""]);
   };
 
-  // Function to handle sharing the poll
   const handleSharePoll = async () => {
     if (!pollId) return;
   
@@ -102,13 +101,13 @@ export default function CreatePoll() {
       <Navbar />
       <div>
         {!isLoading ? (
-          <div className="min-h-screen bg-gray-100 p-4">
+          <div className="min-h-screen bg-gray-900 p-4">
             <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">
               Create a New Poll
             </h1>
             <form
               onSubmit={handleSubmit}
-              className="mt-8 max-w-2xl mx-auto bg-white shadow-md rounded-lg p-4"
+              className="mt-8 max-w-2xl mx-auto bg-blue shadow-md rounded-lg p-4"
             >
               <label className="block text-gray-700 font-semibold mb-2">
                 Poll Title:
@@ -133,7 +132,7 @@ export default function CreatePoll() {
                       onChange={(e) =>
                         handleOptionChange(index, e.target.value)
                       }
-                      className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
                       placeholder={`Option ${index + 1}`}
                     />
                     {options.length > 2 && (

@@ -4,10 +4,10 @@ import Poll from "@/models/Poll";
 
 export async function GET() {
   try {
-    await connectDB(); // Connect to MongoDB
+    await connectDB();
+    const poll = await Poll.find();
 
-    const polls = await Poll.find({}).sort({ createdAt: -1 }); // Fetch polls from database
-    return NextResponse.json({ polls });
+    return NextResponse.json({ poll });
   } catch (error) {
     console.error("Error fetching polls:", error);
     return NextResponse.json(
